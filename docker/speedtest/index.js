@@ -15,11 +15,12 @@ const log = (message, severity = "Info") =>
   console.log(`[${severity.toUpperCase()}][${new Date()}] ${message}`);
 
 const getSpeedMetrics = async () => {
-  const args = (process.env.SPEEDTEST_SERVER) ?
-    [ "--accept-license", "--accept-gdpr", "-f", "json", "--server-id=" + process.env.SPEEDTEST_SERVER] :
-    [ "--accept-license", "--accept-gdpr", "-f", "json" ];
-
-  const { stdout } = await execa("speedtest", args);
+  const { stdout } = await execa("speedtest", [
+    "--accept-license",
+    "--accept-gdpr",
+    "-f",
+    "json"
+  ], {timeout:600000 });
   const result = JSON.parse(stdout);
   return {
     upload: bitToMbps(result.upload.bandwidth),
